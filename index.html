@@ -134,8 +134,17 @@
     </header>
 
     <!-- Interactive Envelope Section (Initial view before breaking wax seal) -->
-    <div id="envelope-front" onclick="openLetter(event)" class="envelope-card p-8 sm:p-12 text-center relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-pink-300/60 group">
+    <div id="envelope-front" onclick="openLetter(event)" class="envelope-card p-6 sm:p-10 text-center relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-pink-300/60 group">
       <div class="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none"></div>
+
+      <!-- Top Bar with Back to Lock Screen button -->
+      <div class="w-full flex items-center justify-between mb-4 relative z-20">
+        <button type="button" onclick="lockWebsite(event)" title="Back to Lock Screen" class="inline-flex items-center gap-1.5 text-xs text-white hover:text-pink-200 bg-white/10 hover:bg-pink-500/25 border border-pink-300/35 px-3.5 py-1.5 rounded-full transition-all cursor-pointer shadow-sm">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-pink-300 pointer-events-none"></i>
+          <span class="font-medium">Lock Screen</span>
+        </button>
+        <span class="text-[11px] uppercase tracking-[0.2em] text-pink-300 font-medium">13th Monthsary</span>
+      </div>
 
       <div class="relative z-10 flex flex-col items-center pointer-events-auto">
         <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center p-1 relative mb-6">
@@ -321,14 +330,13 @@
         <div>
           <label class="block text-xs uppercase tracking-wider text-pink-200 mb-1.5" for="audio-mode-select">Audio Mode</label>
           <select id="audio-mode-select" class="w-full bg-[#351540] border border-pink-300/40 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-pink-300">
-            <option value="ambient">Built-in Ambient Chimes (Soft Melody)</option>
             <option value="file">Upload Local MP3 / Audio File</option>
             <option value="url">Direct Audio URL (MP3 link)</option>
           </select>
         </div>
 
         <!-- File Upload Container -->
-        <div id="file-upload-container" class="hidden">
+        <div id="file-upload-container">
           <label class="block text-xs uppercase tracking-wider text-pink-200 mb-1.5" for="custom-audio-file">Select Audio File</label>
           <input type="file" id="custom-audio-file" accept="audio/*" class="w-full text-xs text-white file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-500/30 file:text-white hover:file:bg-pink-500/45 cursor-pointer bg-white/10 p-2 rounded-xl border border-white/20">
         </div>
@@ -341,7 +349,7 @@
 
         <div class="p-3 rounded-xl bg-white/10 border border-pink-300/20 text-xs text-pink-100 flex items-start gap-2">
           <i data-lucide="info" class="w-4 h-4 text-pink-300 shrink-0 mt-0.5"></i>
-          <span>You can also place an MP3 named <code class="text-pink-300 font-mono">music.mp3</code> in this folder and update <code class="text-pink-300 font-mono">CONFIG.audioSrc</code> in <code class="text-pink-300 font-mono">app.js</code>.</span>
+          <span>You can also place your song in <code class="text-pink-300 font-mono">assets/audio/</code> or name it <code class="text-pink-300 font-mono">music.mp3</code> and set <code class="text-pink-300 font-mono">CONFIG.audioSrc</code> in <code class="text-pink-300 font-mono">app.js</code> anytime.</span>
         </div>
       </div>
 

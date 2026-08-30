@@ -294,15 +294,16 @@ function unlockWebsite(instant = false) {
   const mainContent = document.getElementById("main-content");
   const floatingMusicDock = document.getElementById("floating-music-dock");
 
+  // Keep floating music dock hidden until inside letter
+  if (floatingMusicDock) {
+    floatingMusicDock.classList.add("hidden", "opacity-0", "translate-y-8");
+  }
+
   if (instant) {
     if (lockScreen) lockScreen.classList.add("hidden");
     if (mainContent) {
       mainContent.classList.remove("hidden", "opacity-0", "translate-y-6");
       mainContent.classList.add("opacity-100", "translate-y-0");
-    }
-    if (floatingMusicDock) {
-      floatingMusicDock.classList.remove("hidden", "opacity-0", "translate-y-8");
-      floatingMusicDock.classList.add("opacity-100", "translate-y-0");
     }
     return;
   }
@@ -312,7 +313,6 @@ function unlockWebsite(instant = false) {
   setTimeout(() => {
     if (lockScreen) lockScreen.classList.add("hidden");
     if (mainContent) mainContent.classList.remove("hidden");
-    if (floatingMusicDock) floatingMusicDock.classList.remove("hidden");
     
     // Smooth transition into content
     setTimeout(() => {
@@ -320,16 +320,68 @@ function unlockWebsite(instant = false) {
         mainContent.classList.remove("opacity-0", "translate-y-6");
         mainContent.classList.add("opacity-100", "translate-y-0");
       }
-      if (floatingMusicDock) {
-        floatingMusicDock.classList.remove("opacity-0", "translate-y-8");
-        floatingMusicDock.classList.add("opacity-100", "translate-y-0");
-      }
     }, 50);
-
-    // Auto-start ambient music on unlock
-    startAudio();
   }, 400);
 }
+
+window.lockWebsite = function(e) {
+  if (e && typeof e.stopPropagation === 'function') {
+    e.stopPropagation();
+  }
+  isUnlocked = false;
+  isLetterOpened = false;
+
+  pauseAudio();
+
+  const lockScreen = document.getElementById("lock-screen");
+  const mainContent = document.getElementById("main-content");
+  const floatingMusicDock = document.getElementById("floating-music-dock");
+  const letterSheet = document.getElementById("letter-sheet");
+  const envelopeFront = document.getElementById("envelope-front");
+  const sealBtn = document.getElementById("seal-btn");
+
+  if (floatingMusicDock) {
+    floatingMusicDock.classList.add("opacity-0", "translate-y-8");
+    setTimeout(() => {
+      floatingMusicDock.classList.add("hidden");
+    }, 300);
+  }
+
+  if (letterSheet) {
+    letterSheet.classList.add("hidden", "opacity-0", "translate-y-12", "scale-95");
+    letterSheet.classList.remove("opacity-100", "translate-y-0", "scale-100");
+  }
+
+  if (envelopeFront) {
+    envelopeFront.classList.remove("hidden", "opacity-0", "scale-95", "pointer-events-none");
+    envelopeFront.classList.add("opacity-100", "scale-100");
+    if (sealBtn) {
+      sealBtn.classList.remove("scale-125", "opacity-0");
+    }
+  }
+
+  if (mainContent) {
+    mainContent.classList.remove("opacity-100", "translate-y-0");
+    mainContent.classList.add("opacity-0", "translate-y-6");
+    setTimeout(() => {
+      mainContent.classList.add("hidden");
+      if (lockScreen) {
+        lockScreen.classList.remove("hidden");
+        setTimeout(() => {
+          lockScreen.classList.remove("opacity-0", "pointer-events-none", "scale-95");
+          initIcons();
+        }, 50);
+      }
+    }, 300);
+  }
+
+  currentPin = "";
+  const pinDots = document.querySelectorAll(".pin-dot");
+  pinDots.forEach((dot) => {
+    dot.classList.add("bg-white/20", "border-white/30");
+    dot.classList.remove("bg-[#f472b6]", "border-[#f472b6]", "bg-rose-500", "border-rose-500", "bg-emerald-400", "border-emerald-400", "shadow-[0_0_14px_rgba(244,114,182,0.8)]");
+  });
+};
 
 function initDevMode() {
   if (CONFIG.devMode) {
@@ -344,8 +396,7 @@ function initDevMode() {
     toggleBtn.addEventListener("click", () => {
       const isLockHidden = lockScreen.classList.contains("hidden");
       if (isLockHidden) {
-        lockScreen.classList.remove("hidden", "opacity-0", "pointer-events-none", "scale-95");
-        mainContent.classList.add("hidden");
+        window.lockWebsite();
         toggleBtn.textContent = "Show Letter";
       } else {
         unlockWebsite(true);
@@ -368,6 +419,7 @@ window.openLetter = function(e) {
   const sealBtn = document.getElementById("seal-btn");
   const envelopeFront = document.getElementById("envelope-front");
   const letterSheet = document.getElementById("letter-sheet");
+  const floatingMusicDock = document.getElementById("floating-music-dock");
 
   if (sealBtn) {
     sealBtn.classList.add("scale-125", "opacity-0");
@@ -391,13 +443,13 @@ window.openLetter = function(e) {
     }, 40);
   }
 
-  // Attempt gentle audio playback
-  try {
-    if (!isPlaying) {
-      startAudio();
-    }
-  } catch (err) {
-    console.warn("Audio playback note:", err);
+  // Show floating music dock ONLY inside the letter view
+  if (floatingMusicDock) {
+    floatingMusicDock.classList.remove("hidden");
+    setTimeout(() => {
+      floatingMusicDock.classList.remove("opacity-0", "translate-y-8");
+      floatingMusicDock.classList.add("opacity-100", "translate-y-0");
+    }, 150);
   }
 };
 
@@ -411,6 +463,15 @@ window.closeLetter = function(e) {
   const sealBtn = document.getElementById("seal-btn");
   const envelopeFront = document.getElementById("envelope-front");
   const letterSheet = document.getElementById("letter-sheet");
+  const floatingMusicDock = document.getElementById("floating-music-dock");
+
+  // Hide floating music dock when outside letter
+  if (floatingMusicDock) {
+    floatingMusicDock.classList.add("opacity-0", "translate-y-8");
+    setTimeout(() => {
+      floatingMusicDock.classList.add("hidden");
+    }, 300);
+  }
 
   if (letterSheet) {
     letterSheet.classList.remove("opacity-100", "translate-y-0", "scale-100");
@@ -454,7 +515,7 @@ function initLetterInteraction() {
 }
 
 /* ==========================================================================
-   AUDIO ENGINE (HTML5 Audio + Procedural Web Audio Ambient Chimes Fallback)
+   AUDIO ENGINE (HTML5 Audio for Custom Music File / URL)
    ========================================================================== */
 function initAudioPlayer() {
   audioElement = document.getElementById("bg-audio");
@@ -472,9 +533,6 @@ function initAudioPlayer() {
   // Check if initial audioSrc exists
   if (CONFIG.audioSrc && CONFIG.audioSrc.trim() !== "") {
     audioElement.src = CONFIG.audioSrc;
-    isUsingSynth = false;
-  } else {
-    isUsingSynth = true;
   }
 
   // Play / Pause Toggles
@@ -514,33 +572,21 @@ function initAudioPlayer() {
 
   if (applySourceBtn) {
     applySourceBtn.addEventListener("click", () => {
-      const mode = audioModeSelect ? audioModeSelect.value : "ambient";
+      const mode = audioModeSelect ? audioModeSelect.value : "file";
       
-      if (mode === "ambient") {
-        isUsingSynth = true;
-        if (audioElement) {
-          audioElement.pause();
-        }
-        updateAudioSourceBadge("Ambient Chimes (Synthesized)");
-      } else if (mode === "file" && fileAudioInput && fileAudioInput.files[0]) {
+      if (mode === "file" && fileAudioInput && fileAudioInput.files[0]) {
         const file = fileAudioInput.files[0];
         const url = URL.createObjectURL(file);
         audioElement.src = url;
-        isUsingSynth = false;
-        stopSynth();
         updateAudioSourceBadge(file.name);
+        startAudio();
       } else if (customAudioInput && customAudioInput.value.trim() !== "") {
         audioElement.src = customAudioInput.value.trim();
-        isUsingSynth = false;
-        stopSynth();
         updateAudioSourceBadge("Custom Audio Stream");
+        startAudio();
       }
 
       if (audioSourceModal) audioSourceModal.classList.add("hidden");
-
-      if (isPlaying) {
-        startAudio();
-      }
     });
   }
 
@@ -550,19 +596,16 @@ function initAudioPlayer() {
       const customUrlContainer = document.getElementById("custom-url-container");
       const fileUploadContainer = document.getElementById("file-upload-container");
       if (e.target.value === "url") {
-        customUrlContainer.classList.remove("hidden");
-        fileUploadContainer.classList.add("hidden");
-      } else if (e.target.value === "file") {
-        fileUploadContainer.classList.remove("hidden");
-        customUrlContainer.classList.add("hidden");
+        if (customUrlContainer) customUrlContainer.classList.remove("hidden");
+        if (fileUploadContainer) fileUploadContainer.classList.add("hidden");
       } else {
-        customUrlContainer.classList.add("hidden");
-        fileUploadContainer.classList.add("hidden");
+        if (fileUploadContainer) fileUploadContainer.classList.remove("hidden");
+        if (customUrlContainer) customUrlContainer.classList.add("hidden");
       }
     });
   }
 
-  // Handle native audio element end
+  // Handle native audio element end (looping)
   if (audioElement) {
     audioElement.addEventListener("ended", () => {
       audioElement.currentTime = 0;
@@ -587,37 +630,29 @@ function togglePlay() {
 }
 
 function startAudio() {
-  isPlaying = true;
-  updateAudioUI();
-
-  if (isUsingSynth) {
-    startSynth();
-  } else {
-    stopSynth();
-    if (audioElement && audioElement.src) {
-      audioElement.volume = isMuted ? 0 : currentVolume;
-      audioElement.play().catch((err) => {
-        console.warn("Audio file playback blocked or not found, falling back to ambient melody synthesizer:", err);
-        isUsingSynth = true;
-        startSynth();
-      });
-    } else {
-      isUsingSynth = true;
-      startSynth();
-    }
+  if (!audioElement || !audioElement.src || audioElement.src === window.location.href) {
+    const audioSourceModal = document.getElementById("audio-source-modal");
+    if (audioSourceModal) audioSourceModal.classList.remove("hidden");
+    return;
   }
+
+  audioElement.volume = isMuted ? 0 : currentVolume;
+  audioElement.play().then(() => {
+    isPlaying = true;
+    updateAudioUI();
+  }).catch((err) => {
+    console.warn("Audio playback waiting for user file / interaction:", err);
+    isPlaying = false;
+    updateAudioUI();
+  });
 }
 
 function pauseAudio() {
   isPlaying = false;
-  updateAudioUI();
-
-  if (isUsingSynth) {
-    stopSynth();
-  }
   if (audioElement) {
     audioElement.pause();
   }
+  updateAudioUI();
 }
 
 function toggleMute() {
@@ -641,9 +676,6 @@ function setVolume(val, updateMuteState = true) {
 
   if (audioElement) {
     audioElement.volume = currentVolume;
-  }
-  if (masterGainNode && audioContext) {
-    masterGainNode.gain.setValueAtTime(currentVolume, audioContext.currentTime);
   }
 
   // Update volume slider elements
@@ -681,90 +713,4 @@ function updateAudioUI() {
   });
 
   initIcons();
-}
-
-/* ==========================================================================
-   WEB AUDIO API - ROMANTIC CELESTE & AMBIENT CHIME SYNTHESIZER
-   Plays a calming, beautiful ambient chord progression (Db Major / F Minor)
-   ========================================================================== */
-function initWebAudioContext() {
-  if (!audioContext) {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    audioContext = new AudioCtx();
-    masterGainNode = audioContext.createGain();
-    masterGainNode.gain.setValueAtTime(isMuted ? 0 : currentVolume, audioContext.currentTime);
-    masterGainNode.connect(audioContext.destination);
-  }
-  if (audioContext.state === "suspended") {
-    audioContext.resume();
-  }
-}
-
-function playSoftChime(frequency, time, duration = 2.5) {
-  if (!audioContext || !masterGainNode) return;
-
-  const osc = audioContext.createOscillator();
-  const gain = audioContext.createGain();
-  const filter = audioContext.createBiquadFilter();
-
-  // Warm gentle sine + subtle triangle character
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(frequency, time);
-
-  // Lowpass filter for warm velvety acoustics
-  filter.type = "lowpass";
-  filter.frequency.setValueAtTime(1400, time);
-  filter.frequency.exponentialRampToValueAtTime(300, time + duration);
-
-  // Envelope (soft attack, slow lingering decay)
-  gain.gain.setValueAtTime(0.0001, time);
-  gain.gain.linearRampToValueAtTime(0.22, time + 0.12);
-  gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
-
-  osc.connect(filter);
-  filter.connect(gain);
-  gain.connect(masterGainNode);
-
-  osc.start(time);
-  osc.stop(time + duration);
-}
-
-function startSynth() {
-  initWebAudioContext();
-  stopSynth();
-
-  // Romantic Pentatonic Progression: (Db4, F4, Ab4, C5, Eb5, F5, Ab5)
-  const notes = [
-    277.18, 349.23, 415.30, 523.25, 622.25, 698.46, 830.61, 
-    311.13, 392.00, 466.16, 587.33, 783.99
-  ];
-
-  let step = 0;
-  function scheduleMelody() {
-    if (!isPlaying || !isUsingSynth) return;
-
-    const now = audioContext.currentTime;
-    // Play dual harmonized ambient notes
-    const note1 = notes[step % notes.length];
-    const note2 = notes[(step + 3) % notes.length];
-
-    playSoftChime(note1, now, 3.2);
-    setTimeout(() => {
-      if (isPlaying && isUsingSynth) {
-        playSoftChime(note2, audioContext.currentTime, 2.8);
-      }
-    }, 450);
-
-    step = (step + 1) % notes.length;
-  }
-
-  scheduleMelody();
-  synthInterval = setInterval(scheduleMelody, 2200);
-}
-
-function stopSynth() {
-  if (synthInterval) {
-    clearInterval(synthInterval);
-    synthInterval = null;
-  }
 }
