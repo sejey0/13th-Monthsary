@@ -65,10 +65,10 @@ function initCanvas() {
   const particleCount = Math.min(width > 768 ? 40 : 22, 50);
 
   const colors = [
-    "rgba(226, 180, 154, 0.4)",  // Gold Champagne
-    "rgba(214, 125, 144, 0.35)", // Rose Blush
-    "rgba(146, 126, 153, 0.3)",  // Soft Lavender Mauve
-    "rgba(238, 216, 204, 0.45)"  // Parchment Cream
+    "rgba(244, 114, 182, 0.65)", // Pink
+    "rgba(192, 132, 252, 0.65)", // Purple
+    "rgba(232, 121, 249, 0.6)",  // Fuchsia
+    "rgba(255, 255, 255, 0.8)"   // White star
   ];
 
   for (let i = 0; i < particleCount; i++) {
@@ -123,11 +123,11 @@ function initKeypad() {
   function updateDots() {
     pinDots.forEach((dot, index) => {
       if (index < currentPin.length) {
-        dot.classList.remove("bg-white/10", "border-white/20");
-        dot.classList.add("bg-[#e2b49a]", "border-[#e2b49a]", "shadow-[0_0_12px_rgba(226,180,154,0.6)]");
+        dot.classList.remove("bg-white/20", "border-white/30");
+        dot.classList.add("bg-[#f472b6]", "border-[#f472b6]", "shadow-[0_0_14px_rgba(244,114,182,0.8)]");
       } else {
-        dot.classList.add("bg-white/10", "border-white/20");
-        dot.classList.remove("bg-[#e2b49a]", "border-[#e2b49a]", "shadow-[0_0_12px_rgba(226,180,154,0.6)]");
+        dot.classList.add("bg-white/20", "border-white/30");
+        dot.classList.remove("bg-[#f472b6]", "border-[#f472b6]", "shadow-[0_0_14px_rgba(244,114,182,0.8)]");
       }
     });
   }

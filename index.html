@@ -15,7 +15,7 @@
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative selection:bg-[#d67d90]/30 selection:text-[#eed8cc]">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative selection:bg-pink-500/40 selection:text-white">
 
   <!-- Ambient Particle Canvas -->
   <canvas id="ambient-canvas"></canvas>
@@ -29,60 +29,52 @@
   <div id="lock-screen" class="relative z-10 w-full max-w-md mx-auto transition-all duration-700">
     <div id="lock-card" class="glass-panel rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden">
       <!-- Glow ambient background light -->
-      <div class="absolute -top-24 -left-24 w-48 h-48 bg-[#d67d90]/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-[#e2b49a]/15 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-pink-500/30 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-500/30 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Lock Icon Header -->
-      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 border border-[#e2b49a]/30 shadow-[0_0_20px_rgba(226,180,154,0.15)] mb-4">
-        <i data-lucide="lock" class="w-7 h-7 text-[#e2b49a]"></i>
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 border border-pink-300/40 shadow-[0_0_25px_rgba(244,114,182,0.3)] mb-4">
+        <i data-lucide="lock" class="w-7 h-7 text-pink-300"></i>
       </div>
 
-      <h1 class="font-serif-luxury text-3xl sm:text-4xl font-normal text-blend-gradient tracking-wide mb-1">
-        13th Monthsary
+      <h1 class="font-serif-luxury text-3xl sm:text-4xl font-normal text-white tracking-wide mb-8">
+        Happy 13th Monthsary
       </h1>
-      <p class="text-xs uppercase tracking-[0.25em] text-[#eed8cc]/70 mb-6 flex items-center justify-center gap-2">
-        <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#e2b49a]/70"></i>
-        <span>August 15, 2026</span>
-      </p>
-
-      <p class="text-sm text-[#eed8cc]/80 font-light mb-6">
-        Enter the secret passcode to unlock this letter
-      </p>
 
       <!-- PIN Indicator Dots (8 Digits for 07152025) -->
       <div class="flex justify-center items-center gap-2.5 sm:gap-3 mb-8">
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
-        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/20 bg-white/10 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
+        <div class="pin-dot w-3.5 h-3.5 rounded-full border border-white/30 bg-white/20 transition-all duration-300"></div>
       </div>
 
       <!-- Error Feedback Message -->
-      <div id="lock-error-msg" class="text-xs text-rose-400 font-medium tracking-wide mb-4 transition-opacity duration-300 opacity-0 h-4 flex items-center justify-center gap-1.5">
+      <div id="lock-error-msg" class="text-xs text-rose-300 font-medium tracking-wide mb-4 transition-opacity duration-300 opacity-0 h-4 flex items-center justify-center gap-1.5">
         <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
         <span>Incorrect passcode. Please try again.</span>
       </div>
 
       <!-- Numeric Keypad Grid -->
       <div class="grid grid-cols-3 gap-3 sm:gap-4 max-w-[280px] mx-auto">
-        <button type="button" data-key="1" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">1</button>
-        <button type="button" data-key="2" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">2</button>
-        <button type="button" data-key="3" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">3</button>
-        <button type="button" data-key="4" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">4</button>
-        <button type="button" data-key="5" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">5</button>
-        <button type="button" data-key="6" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">6</button>
-        <button type="button" data-key="7" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">7</button>
-        <button type="button" data-key="8" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">8</button>
-        <button type="button" data-key="9" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">9</button>
-        <button type="button" id="btn-clear" class="key-btn py-3.5 rounded-2xl text-xs font-semibold uppercase tracking-wider text-[#eed8cc]/60 flex items-center justify-center">
+        <button type="button" data-key="1" class="key-btn py-3.5 rounded-2xl text-lg font-medium">1</button>
+        <button type="button" data-key="2" class="key-btn py-3.5 rounded-2xl text-lg font-medium">2</button>
+        <button type="button" data-key="3" class="key-btn py-3.5 rounded-2xl text-lg font-medium">3</button>
+        <button type="button" data-key="4" class="key-btn py-3.5 rounded-2xl text-lg font-medium">4</button>
+        <button type="button" data-key="5" class="key-btn py-3.5 rounded-2xl text-lg font-medium">5</button>
+        <button type="button" data-key="6" class="key-btn py-3.5 rounded-2xl text-lg font-medium">6</button>
+        <button type="button" data-key="7" class="key-btn py-3.5 rounded-2xl text-lg font-medium">7</button>
+        <button type="button" data-key="8" class="key-btn py-3.5 rounded-2xl text-lg font-medium">8</button>
+        <button type="button" data-key="9" class="key-btn py-3.5 rounded-2xl text-lg font-medium">9</button>
+        <button type="button" id="btn-clear" class="key-btn py-3.5 rounded-2xl text-xs font-semibold uppercase tracking-wider text-pink-200/80 flex items-center justify-center">
           <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
         </button>
-        <button type="button" data-key="0" class="key-btn py-3.5 rounded-2xl text-lg font-medium text-white/90">0</button>
-        <button type="button" id="btn-backspace" class="key-btn py-3.5 rounded-2xl text-xs font-semibold uppercase tracking-wider text-[#eed8cc]/60 flex items-center justify-center">
+        <button type="button" data-key="0" class="key-btn py-3.5 rounded-2xl text-lg font-medium">0</button>
+        <button type="button" id="btn-backspace" class="key-btn py-3.5 rounded-2xl text-xs font-semibold uppercase tracking-wider text-pink-200/80 flex items-center justify-center">
           <i data-lucide="delete" class="w-4 h-4"></i>
         </button>
       </div>
@@ -96,26 +88,26 @@
     
     <!-- Top Occasion Header -->
     <header class="text-center mb-8">
-      <h1 class="font-serif-luxury text-4xl sm:text-5xl md:text-6xl font-normal text-blend-gradient leading-tight">
+      <h1 class="font-serif-luxury text-4xl sm:text-5xl md:text-6xl font-normal text-white leading-tight drop-shadow-sm">
         August 15, 2026
       </h1>
     </header>
 
     <!-- Interactive Envelope Section (Initial view before breaking wax seal) -->
-    <div id="envelope-front" onclick="openLetter(event)" class="envelope-card p-8 sm:p-12 text-center relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-[#e2b49a]/40 group">
-      <div class="absolute inset-0 bg-gradient-to-tr from-[#251722]/50 via-transparent to-[#3b1d2c]/30 pointer-events-none"></div>
+    <div id="envelope-front" onclick="openLetter(event)" class="envelope-card p-8 sm:p-12 text-center relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-pink-300/60 group">
+      <div class="absolute inset-0 bg-gradient-to-tr from-purple-900/40 via-transparent to-pink-900/30 pointer-events-none"></div>
 
       <div class="relative z-10 flex flex-col items-center pointer-events-auto">
         <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center p-1 relative mb-6">
-          <div class="absolute inset-0 rounded-full border border-dashed border-[#e2b49a]/40 animate-spin pointer-events-none" style="animation-duration: 20s;"></div>
+          <div class="absolute inset-0 rounded-full border border-dashed border-pink-300/50 animate-spin pointer-events-none" style="animation-duration: 20s;"></div>
           <button id="seal-btn" onclick="openLetter(event)" type="button" aria-label="Open Letter" class="wax-seal-btn w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center cursor-pointer shadow-2xl relative z-10 group-hover:scale-105 transition-transform">
-            <i data-lucide="mail-open" class="w-7 h-7 sm:w-8 sm:h-8 text-[#eed8cc] pointer-events-none"></i>
+            <i data-lucide="mail-open" class="w-7 h-7 sm:w-8 sm:h-8 text-white pointer-events-none"></i>
           </button>
         </div>
 
-        <button type="button" onclick="openLetter(event)" class="inline-flex items-center gap-2 text-xs sm:text-sm text-[#e2b49a] bg-white/[0.04] group-hover:bg-[#e2b49a]/15 px-5 py-2.5 rounded-full border border-[#e2b49a]/25 transition-colors cursor-pointer shadow-sm">
-          <i data-lucide="fingerprint" class="w-4 h-4 pointer-events-none"></i>
-          <span>Tap the seal to open</span>
+        <button type="button" onclick="openLetter(event)" class="inline-flex items-center gap-2 text-xs sm:text-sm text-white bg-white/10 group-hover:bg-pink-500/25 px-5 py-2.5 rounded-full border border-pink-300/35 transition-colors cursor-pointer shadow-sm">
+          <i data-lucide="fingerprint" class="w-4 h-4 text-pink-300 pointer-events-none"></i>
+          <span class="font-medium">Tap the seal to open</span>
         </button>
       </div>
     </div>
@@ -124,67 +116,67 @@
     <article id="letter-sheet" class="hidden opacity-0 translate-y-12 scale-95 transition-all duration-700 envelope-card overflow-hidden">
       
       <!-- Letter Top Aesthetic Bar -->
-      <div class="px-6 sm:px-10 pt-8 pb-4 border-b border-white/5 flex flex-wrap items-center justify-between gap-4">
+      <div class="px-6 sm:px-10 pt-8 pb-4 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3 sm:gap-4">
           <!-- Back to Envelope Button -->
-          <button type="button" onclick="closeLetter(event)" class="btn-close-letter inline-flex items-center gap-1.5 text-xs text-[#e2b49a] hover:text-white bg-white/5 hover:bg-[#e2b49a]/20 border border-[#e2b49a]/30 px-3.5 py-1.5 rounded-full transition-all cursor-pointer shadow-sm">
-            <i data-lucide="arrow-left" class="w-3.5 h-3.5 pointer-events-none"></i>
+          <button type="button" onclick="closeLetter(event)" class="btn-close-letter inline-flex items-center gap-1.5 text-xs text-white hover:text-pink-200 bg-white/10 hover:bg-pink-500/25 border border-pink-300/35 px-3.5 py-1.5 rounded-full transition-all cursor-pointer shadow-sm">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-pink-300 pointer-events-none"></i>
             <span class="font-medium">Back</span>
           </button>
 
           <div>
-            <span class="text-[11px] uppercase tracking-[0.2em] text-[#e2b49a]/80 font-medium block">Special Keepsake</span>
-            <span class="font-serif-luxury text-xl sm:text-2xl text-[#eed8cc]">August 15, 2026</span>
+            <span class="text-[11px] uppercase tracking-[0.2em] text-pink-300 font-medium block">Special Keepsake</span>
+            <span class="font-serif-luxury text-xl sm:text-2xl text-white">August 15, 2026</span>
           </div>
         </div>
         
         <!-- Integrated Mini Music Indicator inside Letter -->
-        <div class="flex items-center gap-2 bg-white/[0.04] border border-[#e2b49a]/20 px-3.5 py-1.5 rounded-full">
+        <div class="flex items-center gap-2 bg-white/10 border border-pink-300/30 px-3.5 py-1.5 rounded-full">
           <div class="audio-visualizer flex items-end gap-0.5 h-4">
             <div class="sound-bar h-1"></div>
             <div class="sound-bar h-2"></div>
             <div class="sound-bar h-1.5"></div>
             <div class="sound-bar h-2.5"></div>
           </div>
-          <button type="button" class="btn-toggle-play flex items-center gap-1.5 text-xs text-[#eed8cc] hover:text-[#e2b49a] transition-colors">
-            <i data-lucide="play" class="play-state-icon w-3.5 h-3.5 text-[#e2b49a]"></i>
+          <button type="button" class="btn-toggle-play flex items-center gap-1.5 text-xs text-white hover:text-pink-200 transition-colors">
+            <i data-lucide="play" class="play-state-icon w-3.5 h-3.5 text-pink-300"></i>
             <span class="play-state-text">Play Music</span>
           </button>
         </div>
       </div>
 
       <!-- Letter Content Body (Easy to edit Lorem Dummy Text) -->
-      <div class="parchment-body p-6 sm:p-10 md:p-12 text-[#eed8cc]/90 text-base sm:text-lg leading-relaxed font-light space-y-6">
+      <div class="parchment-body p-6 sm:p-10 md:p-12 text-white text-base sm:text-lg leading-relaxed font-light space-y-6">
         
         <!-- Salutation -->
-        <div class="font-serif-luxury text-3xl sm:text-4xl text-[#f5eae3] font-normal italic">
+        <div class="font-serif-luxury text-3xl sm:text-4xl text-white font-normal italic">
           My Dearest,
         </div>
 
         <!-- ================================================================= -->
         <!-- REPLACE YOUR LETTER CONTENT BELOW (Editable placeholder paragraphs)-->
         <!-- ================================================================= -->
-        <p class="font-light tracking-wide text-[#eed8cc]/95 leading-relaxed first-letter:text-4xl first-letter:font-serif-luxury first-letter:text-[#e2b49a] first-letter:mr-2 first-letter:float-left">
+        <p class="font-light tracking-wide text-white leading-relaxed first-letter:text-4xl first-letter:font-serif-luxury first-letter:text-pink-300 first-letter:mr-2 first-letter:float-left">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla.
         </p>
 
-        <p class="font-light tracking-wide text-[#eed8cc]/90 leading-relaxed">
+        <p class="font-light tracking-wide text-white/95 leading-relaxed">
           Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor. Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor.
         </p>
 
-        <p class="font-light tracking-wide text-[#eed8cc]/90 leading-relaxed">
+        <p class="font-light tracking-wide text-white/95 leading-relaxed">
           Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa. Fusce ac turpis quis ligula lacinia aliquet. Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
         </p>
         <!-- ================================================================= -->
 
         <!-- Sign-off -->
-        <div class="pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div class="pt-6 border-t border-white/15 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <p class="text-xs uppercase tracking-widest text-[#eed8cc]/60 mb-1">Forever &amp; Always</p>
-            <p class="font-serif-luxury text-2xl sm:text-3xl text-gold-gradient italic">With all my love,</p>
+            <p class="text-xs uppercase tracking-widest text-pink-200/80 mb-1">Forever &amp; Always</p>
+            <p class="font-serif-luxury text-2xl sm:text-3xl text-white italic">With all my love,</p>
           </div>
-          <div class="flex items-center gap-2 text-xs text-[#eed8cc]/60">
-            <i data-lucide="bookmark" class="w-3.5 h-3.5 text-[#e2b49a]"></i>
+          <div class="flex items-center gap-2 text-xs text-pink-200/90">
+            <i data-lucide="bookmark" class="w-3.5 h-3.5 text-pink-300"></i>
             <span>13 Months &amp; Beyond</span>
           </div>
         </div>
@@ -192,15 +184,15 @@
       </div>
 
       <!-- Letter Bottom Audio Control Bar & Source Switcher -->
-      <div class="bg-black/30 border-t border-white/10 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+      <div class="bg-black/25 border-t border-white/10 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <button type="button" class="btn-toggle-play w-9 h-9 rounded-full bg-white/10 hover:bg-[#e2b49a]/20 border border-[#e2b49a]/30 flex items-center justify-center transition-colors">
-            <i data-lucide="play" class="play-state-icon w-4 h-4 text-[#e2b49a]"></i>
+          <button type="button" class="btn-toggle-play w-9 h-9 rounded-full bg-white/10 hover:bg-pink-500/30 border border-pink-300/40 flex items-center justify-center transition-colors">
+            <i data-lucide="play" class="play-state-icon w-4 h-4 text-pink-300"></i>
           </button>
           
           <div class="flex flex-col">
-            <span class="text-xs font-medium text-[#eed8cc]">Background Melody</span>
-            <span id="audio-source-name" class="text-[11px] text-[#eed8cc]/50 truncate max-w-[150px] sm:max-w-[220px]">
+            <span class="text-xs font-medium text-white">Background Melody</span>
+            <span id="audio-source-name" class="text-[11px] text-pink-200/70 truncate max-w-[150px] sm:max-w-[220px]">
               Ambient Chimes (Synthesized)
             </span>
           </div>
@@ -209,21 +201,21 @@
         <div class="flex items-center gap-3">
           <!-- Volume Controls -->
           <div class="flex items-center gap-2">
-            <button type="button" class="btn-toggle-mute text-[#eed8cc]/70 hover:text-[#e2b49a] transition-colors p-1">
+            <button type="button" class="btn-toggle-mute text-pink-200 hover:text-white transition-colors p-1">
               <i data-lucide="volume-2" class="mute-state-icon w-4 h-4"></i>
             </button>
             <input type="range" class="volume-slider w-16 sm:w-20" min="0" max="1" step="0.01" value="0.7" aria-label="Volume">
           </div>
 
           <!-- Fold / Back Button -->
-          <button type="button" onclick="closeLetter(event)" class="btn-close-letter inline-flex items-center gap-1.5 text-xs text-[#eed8cc]/80 hover:text-white px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
-            <i data-lucide="mail" class="w-3.5 h-3.5 text-[#e2b49a]"></i>
+          <button type="button" onclick="closeLetter(event)" class="btn-close-letter inline-flex items-center gap-1.5 text-xs text-white hover:text-pink-200 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-colors">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-pink-300"></i>
             <span>Fold Letter</span>
           </button>
 
           <!-- Switch Music Button -->
-          <button type="button" class="btn-open-source-modal inline-flex items-center gap-1.5 text-xs text-[#e2b49a] hover:text-white px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-[#e2b49a]/20 transition-colors">
-            <i data-lucide="music" class="w-3.5 h-3.5"></i>
+          <button type="button" class="btn-open-source-modal inline-flex items-center gap-1.5 text-xs text-white hover:text-pink-200 px-2.5 py-1.5 rounded-lg bg-pink-500/20 hover:bg-pink-500/35 border border-pink-300/40 transition-colors">
+            <i data-lucide="music" class="w-3.5 h-3.5 text-pink-300"></i>
             <span>Switch Music</span>
           </button>
         </div>
@@ -237,7 +229,7 @@
   <!-- 3. FLOATING MUSIC CONTROLLER DOCK (Fixed Bottom Widget)                   -->
   <!-- ========================================================================= -->
   <div id="floating-music-dock" class="hidden opacity-0 translate-y-8 transition-all duration-700 fixed bottom-4 sm:bottom-6 z-40">
-    <div class="glass-panel px-4 py-2.5 rounded-full flex items-center gap-3 sm:gap-4 shadow-2xl border border-[#e2b49a]/25">
+    <div class="glass-panel px-4 py-2.5 rounded-full flex items-center gap-3 sm:gap-4 shadow-2xl border border-pink-300/35">
       
       <!-- Equalizer Visualizer -->
       <div class="audio-visualizer flex items-end gap-0.5 h-4 px-1">
@@ -248,12 +240,12 @@
       </div>
 
       <!-- Play/Pause Toggle Button -->
-      <button type="button" class="btn-toggle-play w-8 h-8 rounded-full bg-[#e2b49a]/15 hover:bg-[#e2b49a]/30 border border-[#e2b49a]/40 flex items-center justify-center text-[#eed8cc] hover:text-white transition-all" aria-label="Toggle Audio Playback">
-        <i data-lucide="play" class="play-state-icon w-3.5 h-3.5 text-[#e2b49a]"></i>
+      <button type="button" class="btn-toggle-play w-8 h-8 rounded-full bg-pink-500/25 hover:bg-pink-500/45 border border-pink-300/50 flex items-center justify-center text-white transition-all" aria-label="Toggle Audio Playback">
+        <i data-lucide="play" class="play-state-icon w-3.5 h-3.5 text-pink-200"></i>
       </button>
 
       <!-- Mute/Unmute Button -->
-      <button type="button" class="btn-toggle-mute text-[#eed8cc]/75 hover:text-[#e2b49a] transition-colors p-1" aria-label="Toggle Mute">
+      <button type="button" class="btn-toggle-mute text-pink-200 hover:text-white transition-colors p-1" aria-label="Toggle Mute">
         <i data-lucide="volume-2" class="mute-state-icon w-4 h-4"></i>
       </button>
 
@@ -263,7 +255,7 @@
       </div>
 
       <!-- Change Audio Source -->
-      <button type="button" class="btn-open-source-modal text-[#eed8cc]/60 hover:text-[#e2b49a] transition-colors p-1" title="Music Settings" aria-label="Music Settings">
+      <button type="button" class="btn-open-source-modal text-pink-200/80 hover:text-white transition-colors p-1" title="Music Settings" aria-label="Music Settings">
         <i data-lucide="sliders" class="w-4 h-4"></i>
       </button>
     </div>
@@ -272,23 +264,23 @@
   <!-- ========================================================================= -->
   <!-- 4. AUDIO SOURCE SETTINGS MODAL                                            -->
   <!-- ========================================================================= -->
-  <div id="audio-source-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-    <div class="glass-panel w-full max-w-md rounded-3xl p-6 sm:p-8 relative border border-[#e2b49a]/30 shadow-2xl">
+  <div id="audio-source-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+    <div class="glass-panel w-full max-w-md rounded-3xl p-6 sm:p-8 relative border border-pink-300/40 shadow-2xl">
       
       <div class="flex items-center justify-between mb-5">
         <div class="flex items-center gap-2">
-          <i data-lucide="music-2" class="w-5 h-5 text-[#e2b49a]"></i>
-          <h3 class="font-serif-luxury text-2xl text-[#eed8cc]">Music Settings</h3>
+          <i data-lucide="music-2" class="w-5 h-5 text-pink-300"></i>
+          <h3 class="font-serif-luxury text-2xl text-white">Music Settings</h3>
         </div>
-        <button id="btn-close-source-modal" type="button" class="text-[#eed8cc]/60 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
+        <button id="btn-close-source-modal" type="button" class="text-pink-200 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="space-y-4 text-sm text-[#eed8cc]/80">
+      <div class="space-y-4 text-sm text-white/90">
         <div>
-          <label class="block text-xs uppercase tracking-wider text-[#eed8cc]/60 mb-1.5" for="audio-mode-select">Audio Mode</label>
-          <select id="audio-mode-select" class="w-full bg-[#161220] border border-[#e2b49a]/30 rounded-xl px-3.5 py-2.5 text-[#eed8cc] focus:outline-none focus:border-[#e2b49a]">
+          <label class="block text-xs uppercase tracking-wider text-pink-200 mb-1.5" for="audio-mode-select">Audio Mode</label>
+          <select id="audio-mode-select" class="w-full bg-[#351540] border border-pink-300/40 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-pink-300">
             <option value="ambient">Built-in Ambient Chimes (Soft Melody)</option>
             <option value="file">Upload Local MP3 / Audio File</option>
             <option value="url">Direct Audio URL (MP3 link)</option>
@@ -297,24 +289,24 @@
 
         <!-- File Upload Container -->
         <div id="file-upload-container" class="hidden">
-          <label class="block text-xs uppercase tracking-wider text-[#eed8cc]/60 mb-1.5" for="custom-audio-file">Select Audio File</label>
-          <input type="file" id="custom-audio-file" accept="audio/*" class="w-full text-xs text-[#eed8cc] file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#e2b49a]/20 file:text-[#eed8cc] hover:file:bg-[#e2b49a]/30 cursor-pointer bg-white/5 p-2 rounded-xl border border-white/10">
+          <label class="block text-xs uppercase tracking-wider text-pink-200 mb-1.5" for="custom-audio-file">Select Audio File</label>
+          <input type="file" id="custom-audio-file" accept="audio/*" class="w-full text-xs text-white file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-500/30 file:text-white hover:file:bg-pink-500/45 cursor-pointer bg-white/10 p-2 rounded-xl border border-white/20">
         </div>
 
         <!-- Custom URL Container -->
         <div id="custom-url-container" class="hidden">
-          <label class="block text-xs uppercase tracking-wider text-[#eed8cc]/60 mb-1.5" for="custom-audio-url">Audio Link URL</label>
-          <input type="url" id="custom-audio-url" placeholder="https://example.com/our-song.mp3" class="w-full bg-[#161220] border border-[#e2b49a]/30 rounded-xl px-3.5 py-2 text-xs text-[#eed8cc] focus:outline-none focus:border-[#e2b49a]">
+          <label class="block text-xs uppercase tracking-wider text-pink-200 mb-1.5" for="custom-audio-url">Audio Link URL</label>
+          <input type="url" id="custom-audio-url" placeholder="https://example.com/our-song.mp3" class="w-full bg-[#351540] border border-pink-300/40 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-pink-300">
         </div>
 
-        <div class="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-[#eed8cc]/60 flex items-start gap-2">
-          <i data-lucide="info" class="w-4 h-4 text-[#e2b49a] shrink-0 mt-0.5"></i>
-          <span>You can also place an MP3 named <code class="text-[#e2b49a]">music.mp3</code> in this folder and update <code class="text-[#e2b49a]">CONFIG.audioSrc</code> in <code class="text-[#e2b49a]">app.js</code>.</span>
+        <div class="p-3 rounded-xl bg-white/10 border border-pink-300/20 text-xs text-pink-100 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-pink-300 shrink-0 mt-0.5"></i>
+          <span>You can also place an MP3 named <code class="text-pink-300 font-mono">music.mp3</code> in this folder and update <code class="text-pink-300 font-mono">CONFIG.audioSrc</code> in <code class="text-pink-300 font-mono">app.js</code>.</span>
         </div>
       </div>
 
       <div class="mt-6 flex justify-end gap-2">
-        <button id="btn-apply-source" type="button" class="px-5 py-2.5 rounded-xl bg-[#e2b49a] hover:bg-[#eed8cc] text-[#161220] font-semibold text-xs transition-colors shadow-lg">
+        <button id="btn-apply-source" type="button" class="px-5 py-2.5 rounded-xl bg-pink-500 hover:bg-pink-400 text-white font-semibold text-xs transition-colors shadow-lg">
           Apply &amp; Play
         </button>
       </div>
