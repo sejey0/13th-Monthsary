@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-purple: #2b1338;
-  --bg-pink: #441a46;
+  --bg-purple: #1f0a28;
+  --bg-pink: #3d143f;
   --accent-pink: #f472b6;
   --accent-fuchsia: #e879f9;
   --accent-purple: #c084fc;
   --accent-rose: #fb7185;
-  --glass-bg: rgba(64, 28, 77, 0.68);
-  --glass-border: rgba(244, 114, 182, 0.32);
+  --glass-bg: rgba(28, 8, 36, 0.3);
+  --glass-border: rgba(244, 114, 182, 0.38);
 }
 
 * {
@@ -24,18 +24,82 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
-  background-image: 
-    radial-gradient(circle at 15% 15%, rgba(244, 114, 182, 0.45) 0%, transparent 45%),
-    radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.45) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.25) 0%, transparent 55%),
-    radial-gradient(circle at 20% 85%, rgba(192, 132, 252, 0.4) 0%, transparent 50%),
-    radial-gradient(circle at 80% 85%, rgba(251, 113, 133, 0.38) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, #381845 0%, #1f0b29 100%);
-  background-attachment: fixed;
 }
 
 .font-serif-luxury {
   font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* 3-Tile Fullscreen Background Slideshow Grid */
+#bg-slideshow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  #bg-slideshow {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+.tile-column {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-right: 1px solid rgba(244, 114, 182, 0.18);
+}
+
+.tile-column:last-child {
+  border-right: none;
+}
+
+@media (max-width: 768px) {
+  .tile-column {
+    border-right: none;
+    border-bottom: 1px solid rgba(244, 114, 182, 0.18);
+  }
+  .tile-column:last-child {
+    border-bottom: none;
+  }
+}
+
+.tile-slide {
+  position: absolute;
+  inset: -15px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 2.2s cubic-bezier(0.4, 0, 0.2, 1), transform 9s ease-out;
+  will-change: opacity, transform;
+}
+
+.tile-slide.active {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.bg-slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(244, 114, 182, 0.22) 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.22) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.12) 0%, transparent 55%),
+    radial-gradient(circle at 20% 85%, rgba(192, 132, 252, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 80% 85%, rgba(251, 113, 133, 0.18) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(24, 7, 32, 0.42) 0%, rgba(38, 11, 48, 0.32) 50%, rgba(18, 4, 25, 0.48) 100%);
+  z-index: 1;
 }
 
 /* Subtle particle canvas */
@@ -47,18 +111,18 @@ body {
   opacity: 0.75;
 }
 
-/* Glassmorphism Card */
+/* Glassmorphism Transparent Card */
 .glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(24, 7, 32, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 20px 50px rgba(32, 8, 43, 0.5), 0 0 35px rgba(244, 114, 182, 0.18);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 35px rgba(244, 114, 182, 0.15);
 }
 
 .glass-pill {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(244, 114, 182, 0.35);
 }
 
@@ -80,21 +144,23 @@ body {
 /* Pin Buttons */
 .key-btn {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(244, 114, 182, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .key-btn:hover {
-  background: rgba(244, 114, 182, 0.25);
-  border-color: rgba(244, 114, 182, 0.6);
+  background: rgba(244, 114, 182, 0.32);
+  border-color: rgba(244, 114, 182, 0.7);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
 }
 
 .key-btn:active {
   transform: scale(0.95);
-  background: rgba(244, 114, 182, 0.38);
+  background: rgba(244, 114, 182, 0.45);
 }
 
 /* Shake Animation */
@@ -116,16 +182,22 @@ body {
 
 .envelope-card {
   position: relative;
-  background: linear-gradient(145deg, rgba(76, 32, 92, 0.88) 0%, rgba(52, 19, 66, 0.94) 100%);
-  border: 1px solid rgba(244, 114, 182, 0.35);
-  box-shadow: 0 25px 60px rgba(32, 8, 43, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border-radius: 1.25rem;
+  background: rgba(24, 7, 32, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-radius: 1.5rem;
 }
 
 /* Letter Texture */
 .parchment-body {
-  background: linear-gradient(180deg, rgba(68, 29, 82, 0.9) 0%, rgba(48, 17, 61, 0.96) 100%);
-  border-left: 2px solid rgba(244, 114, 182, 0.45);
+  background: linear-gradient(180deg, rgba(38, 11, 48, 0.78) 0%, rgba(24, 6, 32, 0.88) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(244, 114, 182, 0.35);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-radius: 1.5rem;
   position: relative;
 }
 

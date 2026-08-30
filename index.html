@@ -17,6 +17,39 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 relative selection:bg-pink-500/40 selection:text-white">
 
+  <!-- Fullscreen 3-Tile Background Photo Grid -->
+  <div id="bg-slideshow">
+    <!-- Tile 1 (Left Tile) -->
+    <div class="tile-column">
+      <div class="tile-slide active" style="background-image: url('assets/images/IMG_20251016_172452_850%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_172747_767%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_172844_150%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_174927_514%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_174931_298%20(1).jpg');"></div>
+    </div>
+
+    <!-- Tile 2 (Center Tile) -->
+    <div class="tile-column">
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_172452_850%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide active" style="background-image: url('assets/images/IMG_20251016_172747_767%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_172844_150%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_174927_514%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_174931_298%20(1).jpg');"></div>
+    </div>
+
+    <!-- Tile 3 (Right Tile) -->
+    <div class="tile-column">
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_172452_850%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_172747_767%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide active" style="background-image: url('assets/images/IMG_20251016_172844_150%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_174927_514%20(1)%20(1).jpg');"></div>
+      <div class="tile-slide" style="background-image: url('assets/images/IMG_20251016_174931_298%20(1).jpg');"></div>
+    </div>
+
+    <!-- Blended Ambient Overlay -->
+    <div class="bg-slide-overlay"></div>
+  </div>
+
   <!-- Ambient Particle Canvas -->
   <canvas id="ambient-canvas"></canvas>
 
@@ -29,11 +62,11 @@
   <div id="lock-screen" class="relative z-10 w-full max-w-md mx-auto transition-all duration-700">
     <div id="lock-card" class="glass-panel rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden">
       <!-- Glow ambient background light -->
-      <div class="absolute -top-24 -left-24 w-48 h-48 bg-pink-500/30 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-500/30 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Lock Icon Header -->
-      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 border border-pink-300/40 shadow-[0_0_25px_rgba(244,114,182,0.3)] mb-4">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 border border-pink-300/40 shadow-[0_0_25px_rgba(244,114,182,0.3)] mb-4">
         <i data-lucide="lock" class="w-7 h-7 text-pink-300"></i>
       </div>
 
@@ -95,7 +128,7 @@
 
     <!-- Interactive Envelope Section (Initial view before breaking wax seal) -->
     <div id="envelope-front" onclick="openLetter(event)" class="envelope-card p-8 sm:p-12 text-center relative overflow-hidden transition-all duration-500 cursor-pointer hover:border-pink-300/60 group">
-      <div class="absolute inset-0 bg-gradient-to-tr from-purple-900/40 via-transparent to-pink-900/30 pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-transparent to-pink-500/10 pointer-events-none"></div>
 
       <div class="relative z-10 flex flex-col items-center pointer-events-auto">
         <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center p-1 relative mb-6">

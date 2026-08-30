@@ -32,6 +32,7 @@ let masterGainNode = null;
 // Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   initIcons();
+  initBackgroundSlideshow();
   initCanvas();
   initKeypad();
   initAudioPlayer();
@@ -43,6 +44,35 @@ function initIcons() {
   if (window.lucide) {
     window.lucide.createIcons();
   }
+}
+
+/* ==========================================================================
+   BACKGROUND IMAGE 3-TILE GRID SLIDESHOW (Smooth Organic Crossfades)
+   ========================================================================== */
+function initBackgroundSlideshow() {
+  const columns = document.querySelectorAll(".tile-column");
+  if (!columns || columns.length === 0) return;
+
+  columns.forEach((col, colIdx) => {
+    const slides = col.querySelectorAll(".tile-slide");
+    if (!slides || slides.length === 0) return;
+
+    let current = 0;
+    slides.forEach((slide, idx) => {
+      if (slide.classList.contains("active")) {
+        current = idx;
+      }
+    });
+
+    // Stagger transitions across the 3 tiles for dynamic movement
+    const slideInterval = 5500 + colIdx * 1500;
+
+    setInterval(() => {
+      slides[current].classList.remove("active");
+      current = (current + 1) % slides.length;
+      slides[current].classList.add("active");
+    }, slideInterval);
+  });
 }
 
 /* ==========================================================================
