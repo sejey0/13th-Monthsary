@@ -77,7 +77,7 @@ function initBackgroundSlideshow() {
 }
 
 /* ==========================================================================
-   AMBIENT BACKGROUND PARTICLES (Blended Orbs & Floating Dust)
+   CONSTELLATION SKY BACKGROUND EFFECT (Interactive Starlight & Celestial Lines)
    ========================================================================== */
 function initCanvas() {
   const canvas = document.getElementById("ambient-canvas");
@@ -92,47 +92,183 @@ function initCanvas() {
     height = canvas.height = window.innerHeight;
   });
 
-  const particles = [];
-  const particleCount = Math.min(width > 768 ? 40 : 22, 50);
+  const isMobile = width <= 768;
+  const starCount = isMobile ? 32 : 55;
+  const maxLineDist = isMobile ? 85 : 120;
+  const maxLineDistSq = maxLineDist * maxLineDist;
+  const mouseDistSq = 140 * 140;
 
-  const colors = [
-    "rgba(244, 114, 182, 0.65)", // Pink
-    "rgba(192, 132, 252, 0.65)", // Purple
-    "rgba(232, 121, 249, 0.6)",  // Fuchsia
-    "rgba(255, 255, 255, 0.8)"   // White star
+  const mouse = { x: -1000, y: -1000, active: false };
+
+  window.addEventListener("pointermove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    mouse.active = true;
+  });
+
+  window.addEventListener("pointerleave", () => {
+    mouse.active = false;
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+
+  // Star colors (romantic pastel starlight)
+  const starColors = [
+    { r: 244, g: 114, b: 182 }, // Blush Pink
+    { r: 192, g: 132, b: 252 }, // Soft Lavender
+    { r: 232, g: 121, b: 249 }, // Radiant Fuchsia
+    { r: 255, g: 245, b: 255 }, // Shimmering Starlight White
+    { r: 251, g: 191, b: 236 }, // Light Rose
   ];
 
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({
+  const stars = [];
+  for (let i = 0; i < starCount; i++) {
+    const col = starColors[Math.floor(Math.random() * starColors.length)];
+    stars.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: Math.random() * 2.2 + 0.6,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: -Math.random() * 0.4 - 0.15,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      alpha: Math.random() * 0.6 + 0.2,
-      pulse: Math.random() * 0.02 + 0.01,
+      radius: Math.random() * 1.6 + 0.6,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28 - 0.05,
+      color: col,
+      baseAlpha: Math.random() * 0.5 + 0.35,
+      twinkleSpeed: Math.random() * 0.03 + 0.01,
+      twinkleOffset: Math.random() * Math.PI * 2,
+      isMajorStar: Math.random() > 0.78, // Bright star with cross glint
     });
   }
 
+  // Shooting star system
+  let shootingStars = [];
+  function createShootingStar() {
+    shootingStars.push({
+      x: Math.random() * width * 0.8 + width * 0.1,
+      y: Math.random() * height * 0.4,
+      length: Math.random() * 70 + 50,
+      speed: Math.random() * 6 + 7,
+      angle: (Math.PI / 4) + (Math.random() - 0.5) * 0.25, // ~45 deg downward
+      opacity: 1,
+      life: 0,
+      maxLife: Math.random() * 30 + 35,
+    });
+  }
+
+  setInterval(() => {
+    if (Math.random() > 0.45 && shootingStars.length < 2) {
+      createShootingStar();
+    }
+  }, 4500);
+
   function render() {
     ctx.clearRect(0, 0, width, height);
+    const now = Date.now() * 0.001;
 
-    particles.forEach((p) => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha += Math.sin(Date.now() * 0.001) * 0.003;
+    // 1. Draw Constellation Connection Lines Between Stars
+    for (let i = 0; i < stars.length; i++) {
+      const s1 = stars[i];
+      for (let j = i + 1; j < stars.length; j++) {
+        const s2 = stars[j];
+        const dx = s1.x - s2.x;
+        const dy = s1.y - s2.y;
+        const distSq = dx * dx + dy * dy;
 
-      if (p.y < -10) p.y = height + 10;
-      if (p.x < -10) p.x = width + 10;
-      if (p.x > width + 10) p.x = -10;
+        if (distSq < maxLineDistSq) {
+          const dist = Math.sqrt(distSq);
+          const lineAlpha = (1 - dist / maxLineDist) * 0.22;
+
+          ctx.beginPath();
+          ctx.moveTo(s1.x, s1.y);
+          ctx.lineTo(s2.x, s2.y);
+          ctx.strokeStyle = `rgba(244, 114, 182, ${lineAlpha})`;
+          ctx.lineWidth = 0.85;
+          ctx.stroke();
+        }
+      }
+
+      // Constellation connection to cursor / touch
+      if (mouse.active) {
+        const mdx = s1.x - mouse.x;
+        const mdy = s1.y - mouse.y;
+        const mdistSq = mdx * mdx + mdy * mdy;
+
+        if (mdistSq < mouseDistSq) {
+          const mdist = Math.sqrt(mdistSq);
+          const mlineAlpha = (1 - mdist / 140) * 0.38;
+
+          ctx.beginPath();
+          ctx.moveTo(s1.x, s1.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = `rgba(232, 121, 249, ${mlineAlpha})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // 2. Draw Stars and Twinkle
+    stars.forEach((s) => {
+      s.x += s.vx;
+      s.y += s.vy;
+
+      // Wrap around edges smoothly
+      if (s.x < -10) s.x = width + 10;
+      if (s.x > width + 10) s.x = -10;
+      if (s.y < -10) s.y = height + 10;
+      if (s.y > height + 10) s.y = -10;
+
+      const alpha = s.baseAlpha + Math.sin(now * s.twinkleSpeed * 10 + s.twinkleOffset) * 0.25;
+      const clampedAlpha = Math.max(0.1, Math.min(1, alpha));
+
+      // Star core circle
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${s.color.r}, ${s.color.g}, ${s.color.b}, ${clampedAlpha})`;
+      ctx.shadowBlur = s.isMajorStar ? 10 : 4;
+      ctx.shadowColor = `rgba(${s.color.r}, ${s.color.g}, ${s.color.b}, ${clampedAlpha})`;
+      ctx.fill();
+
+      // Delicate 4-point cross glint on major bright stars
+      if (s.isMajorStar && clampedAlpha > 0.45) {
+        const glintLen = s.radius * 2.8;
+        ctx.beginPath();
+        ctx.moveTo(s.x - glintLen, s.y);
+        ctx.lineTo(s.x + glintLen, s.y);
+        ctx.moveTo(s.x, s.y - glintLen);
+        ctx.lineTo(s.x, s.y + glintLen);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${clampedAlpha * 0.45})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    });
+
+    // 3. Render Shooting Stars
+    shootingStars.forEach((meteor, index) => {
+      meteor.life++;
+      meteor.x += Math.cos(meteor.angle) * meteor.speed;
+      meteor.y += Math.sin(meteor.angle) * meteor.speed;
+      meteor.opacity = 1 - meteor.life / meteor.maxLife;
+
+      if (meteor.opacity <= 0) {
+        shootingStars.splice(index, 1);
+        return;
+      }
+
+      const tailX = meteor.x - Math.cos(meteor.angle) * meteor.length;
+      const tailY = meteor.y - Math.sin(meteor.angle) * meteor.length;
+
+      const grad = ctx.createLinearGradient(tailX, tailY, meteor.x, meteor.y);
+      grad.addColorStop(0, "rgba(244, 114, 182, 0)");
+      grad.addColorStop(0.7, `rgba(192, 132, 252, ${meteor.opacity * 0.5})`);
+      grad.addColorStop(1, `rgba(255, 255, 255, ${meteor.opacity})`);
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(meteor.x, meteor.y);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.6;
       ctx.shadowBlur = 8;
-      ctx.shadowColor = p.color;
-      ctx.fill();
+      ctx.shadowColor = "rgba(244, 114, 182, 0.8)";
+      ctx.stroke();
     });
 
     requestAnimationFrame(render);
@@ -292,12 +428,6 @@ function unlockWebsite(instant = false) {
   isUnlocked = true;
   const lockScreen = document.getElementById("lock-screen");
   const mainContent = document.getElementById("main-content");
-  const floatingMusicDock = document.getElementById("floating-music-dock");
-
-  // Keep floating music dock hidden until inside letter
-  if (floatingMusicDock) {
-    floatingMusicDock.classList.add("hidden", "opacity-0", "translate-y-8");
-  }
 
   if (instant) {
     if (lockScreen) lockScreen.classList.add("hidden");
@@ -335,17 +465,9 @@ window.lockWebsite = function(e) {
 
   const lockScreen = document.getElementById("lock-screen");
   const mainContent = document.getElementById("main-content");
-  const floatingMusicDock = document.getElementById("floating-music-dock");
   const letterSheet = document.getElementById("letter-sheet");
   const envelopeFront = document.getElementById("envelope-front");
   const sealBtn = document.getElementById("seal-btn");
-
-  if (floatingMusicDock) {
-    floatingMusicDock.classList.add("opacity-0", "translate-y-8");
-    setTimeout(() => {
-      floatingMusicDock.classList.add("hidden");
-    }, 300);
-  }
 
   if (letterSheet) {
     letterSheet.classList.add("hidden", "opacity-0", "translate-y-12", "scale-95");
@@ -419,7 +541,6 @@ window.openLetter = function(e) {
   const sealBtn = document.getElementById("seal-btn");
   const envelopeFront = document.getElementById("envelope-front");
   const letterSheet = document.getElementById("letter-sheet");
-  const floatingMusicDock = document.getElementById("floating-music-dock");
 
   if (sealBtn) {
     sealBtn.classList.add("scale-125", "opacity-0");
@@ -442,15 +563,6 @@ window.openLetter = function(e) {
       initIcons();
     }, 40);
   }
-
-  // Show floating music dock ONLY inside the letter view
-  if (floatingMusicDock) {
-    floatingMusicDock.classList.remove("hidden");
-    setTimeout(() => {
-      floatingMusicDock.classList.remove("opacity-0", "translate-y-8");
-      floatingMusicDock.classList.add("opacity-100", "translate-y-0");
-    }, 150);
-  }
 };
 
 window.closeLetter = function(e) {
@@ -463,15 +575,6 @@ window.closeLetter = function(e) {
   const sealBtn = document.getElementById("seal-btn");
   const envelopeFront = document.getElementById("envelope-front");
   const letterSheet = document.getElementById("letter-sheet");
-  const floatingMusicDock = document.getElementById("floating-music-dock");
-
-  // Hide floating music dock when outside letter
-  if (floatingMusicDock) {
-    floatingMusicDock.classList.add("opacity-0", "translate-y-8");
-    setTimeout(() => {
-      floatingMusicDock.classList.add("hidden");
-    }, 300);
-  }
 
   if (letterSheet) {
     letterSheet.classList.remove("opacity-100", "translate-y-0", "scale-100");
