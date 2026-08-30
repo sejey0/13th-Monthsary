@@ -93,12 +93,12 @@ body {
   position: absolute;
   inset: 0;
   background: 
-    radial-gradient(circle at 15% 15%, rgba(244, 114, 182, 0.22) 0%, transparent 45%),
-    radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.22) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 20% 85%, rgba(192, 132, 252, 0.18) 0%, transparent 50%),
-    radial-gradient(circle at 80% 85%, rgba(251, 113, 133, 0.18) 0%, transparent 50%),
-    linear-gradient(135deg, rgba(24, 7, 32, 0.42) 0%, rgba(38, 11, 48, 0.32) 50%, rgba(18, 4, 25, 0.48) 100%);
+    radial-gradient(circle at 15% 15%, rgba(244, 114, 182, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.08) 0%, transparent 55%),
+    radial-gradient(circle at 20% 85%, rgba(192, 132, 252, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 85%, rgba(251, 113, 133, 0.12) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(20, 5, 26, 0.2) 0%, rgba(30, 8, 38, 0.1) 50%, rgba(15, 3, 20, 0.22) 100%);
   z-index: 1;
 }
 
@@ -113,17 +113,17 @@ body {
 
 /* Glassmorphism Transparent Card */
 .glass-panel {
-  background: rgba(24, 7, 32, 0.28);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 35px rgba(244, 114, 182, 0.15);
+  background: rgba(18, 5, 24, 0.16);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 35px rgba(244, 114, 182, 0.12);
 }
 
 .glass-pill {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(244, 114, 182, 0.35);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 /* Shimmer gradient text */
@@ -144,23 +144,27 @@ body {
 /* Pin Buttons */
 .key-btn {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   color: #ffffff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
 
 .key-btn:hover {
-  background: rgba(244, 114, 182, 0.32);
-  border-color: rgba(244, 114, 182, 0.7);
+  background: rgba(244, 114, 182, 0.4);
+  border-color: rgba(255, 255, 255, 0.8);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
 }
 
 .key-btn:active {
   transform: scale(0.95);
-  background: rgba(244, 114, 182, 0.45);
+  background: rgba(244, 114, 182, 0.55);
 }
 
 /* Shake Animation */
@@ -182,11 +186,11 @@ body {
 
 .envelope-card {
   position: relative;
-  background: rgba(24, 7, 32, 0.28);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(244, 114, 182, 0.4);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: rgba(18, 5, 24, 0.16);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   border-radius: 1.5rem;
 }
 

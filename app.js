@@ -9,8 +9,8 @@ const CONFIG = {
   dateString: "August 15, 2026",
   occasion: "13th Monthsary",
   // Path to your custom mp3 file (e.g. './music.mp3' or full URL)
-  // If empty or file fails to load, it will seamlessly use the built-in ambient romantic chime synthesizer!
-  audioSrc: "", 
+  audioSrc: "",
+  devMode: true, // Dev mode: Bypasses lock screen automatically on load
 };
 
 // State Variables
@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initKeypad();
   initAudioPlayer();
   initLetterInteraction();
+  initDevMode();
 });
 
 // Refresh Lucide Icons
@@ -143,15 +144,34 @@ function initCanvas() {
 /* ==========================================================================
    LOCK SCREEN & PASSCODE SYSTEM
    ========================================================================== */
+let errorTimeout = null;
+
 function initKeypad() {
   const pinDots = document.querySelectorAll(".pin-dot");
   const numKeys = document.querySelectorAll("[data-key]");
   const clearBtn = document.getElementById("btn-clear");
   const backspaceBtn = document.getElementById("btn-backspace");
   const lockCard = document.getElementById("lock-card");
+  const errorMsg = document.getElementById("lock-error-msg");
+
+  function clearPendingError() {
+    if (errorTimeout) {
+      clearTimeout(errorTimeout);
+      errorTimeout = null;
+    }
+    if (lockCard) lockCard.classList.remove("animate-shake");
+    if (errorMsg) {
+      errorMsg.classList.add("opacity-0");
+      errorMsg.classList.remove("opacity-100");
+    }
+    pinDots.forEach((dot) => {
+      dot.classList.remove("bg-rose-500", "border-rose-500", "shadow-[0_0_15px_rgba(244,63,94,0.8)]");
+    });
+  }
 
   function updateDots() {
     pinDots.forEach((dot, index) => {
+      dot.classList.remove("bg-rose-500", "border-rose-500", "bg-emerald-400", "border-emerald-400");
       if (index < currentPin.length) {
         dot.classList.remove("bg-white/20", "border-white/30");
         dot.classList.add("bg-[#f472b6]", "border-[#f472b6]", "shadow-[0_0_14px_rgba(244,114,182,0.8)]");
@@ -163,6 +183,7 @@ function initKeypad() {
   }
 
   function handleKeyInput(digit) {
+    clearPendingError();
     if (currentPin.length < CONFIG.passcode.length) {
       currentPin += digit;
       updateDots();
@@ -173,6 +194,7 @@ function initKeypad() {
   }
 
   function handleBackspace() {
+    clearPendingError();
     if (currentPin.length > 0) {
       currentPin = currentPin.slice(0, -1);
       updateDots();
@@ -180,6 +202,7 @@ function initKeypad() {
   }
 
   function handleClear() {
+    clearPendingError();
     currentPin = "";
     updateDots();
   }
@@ -188,54 +211,76 @@ function initKeypad() {
     if (currentPin === CONFIG.passcode) {
       // Success feedback
       pinDots.forEach((dot) => {
-        dot.classList.remove("bg-[#e2b49a]");
+        dot.classList.remove("bg-rose-500", "bg-[#f472b6]");
         dot.classList.add("bg-emerald-400", "border-emerald-400", "shadow-[0_0_15px_rgba(52,211,153,0.8)]");
       });
 
       setTimeout(() => {
         unlockWebsite();
-      }, 350);
+      }, 300);
     } else {
-      // Error feedback
-      lockCard.classList.add("animate-shake");
+      // Error feedback & Auto-reset
+      if (lockCard) lockCard.classList.add("animate-shake");
       pinDots.forEach((dot) => {
-        dot.classList.remove("bg-[#e2b49a]");
+        dot.classList.remove("bg-[#f472b6]", "bg-white/20", "border-white/30");
         dot.classList.add("bg-rose-500", "border-rose-500", "shadow-[0_0_15px_rgba(244,63,94,0.8)]");
       });
 
-      const errorMsg = document.getElementById("lock-error-msg");
       if (errorMsg) {
         errorMsg.classList.remove("opacity-0");
         errorMsg.classList.add("opacity-100");
       }
 
-      setTimeout(() => {
-        lockCard.classList.remove("animate-shake");
-        currentPin = "";
+      // Automatically reset PIN state immediately
+      currentPin = "";
+
+      errorTimeout = setTimeout(() => {
+        if (lockCard) lockCard.classList.remove("animate-shake");
         updateDots();
         if (errorMsg) {
           errorMsg.classList.add("opacity-0");
           errorMsg.classList.remove("opacity-100");
         }
-      }, 900);
+        errorTimeout = null;
+      }, 600);
     }
   }
 
+  // Keypad numbers
   numKeys.forEach((key) => {
-    key.addEventListener("click", () => {
+    key.addEventListener("click", (e) => {
+      e.preventDefault();
       handleKeyInput(key.getAttribute("data-key"));
     });
   });
 
-  if (clearBtn) clearBtn.addEventListener("click", handleClear);
-  if (backspaceBtn) backspaceBtn.addEventListener("click", handleBackspace);
+  // Reset / Clear button
+  if (clearBtn) {
+    clearBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleClear();
+    });
+  }
+
+  // Delete / Backspace button
+  if (backspaceBtn) {
+    backspaceBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      handleBackspace();
+    });
+  }
 
   // Keyboard support
   window.addEventListener("keydown", (e) => {
-    if (isUnlocked) return;
+    if (isUnlocked && !document.getElementById("lock-screen").classList.contains("hidden")) {
+      // if lock screen is currently visible
+    } else if (isUnlocked) {
+      return;
+    }
+
     if (e.key >= "0" && e.key <= "9") {
       handleKeyInput(e.key);
-    } else if (e.key === "Backspace") {
+    } else if (e.key === "Backspace" || e.key === "Delete") {
       handleBackspace();
     } else if (e.key === "Escape") {
       handleClear();
@@ -243,25 +288,38 @@ function initKeypad() {
   });
 }
 
-function unlockWebsite() {
+function unlockWebsite(instant = false) {
   isUnlocked = true;
   const lockScreen = document.getElementById("lock-screen");
   const mainContent = document.getElementById("main-content");
   const floatingMusicDock = document.getElementById("floating-music-dock");
 
-  lockScreen.classList.add("opacity-0", "pointer-events-none", "scale-95");
+  if (instant) {
+    if (lockScreen) lockScreen.classList.add("hidden");
+    if (mainContent) {
+      mainContent.classList.remove("hidden", "opacity-0", "translate-y-6");
+      mainContent.classList.add("opacity-100", "translate-y-0");
+    }
+    if (floatingMusicDock) {
+      floatingMusicDock.classList.remove("hidden", "opacity-0", "translate-y-8");
+      floatingMusicDock.classList.add("opacity-100", "translate-y-0");
+    }
+    return;
+  }
+
+  if (lockScreen) lockScreen.classList.add("opacity-0", "pointer-events-none", "scale-95");
   
   setTimeout(() => {
-    lockScreen.classList.add("hidden");
-    mainContent.classList.remove("hidden");
-    if (floatingMusicDock) {
-      floatingMusicDock.classList.remove("hidden");
-    }
+    if (lockScreen) lockScreen.classList.add("hidden");
+    if (mainContent) mainContent.classList.remove("hidden");
+    if (floatingMusicDock) floatingMusicDock.classList.remove("hidden");
     
     // Smooth transition into content
     setTimeout(() => {
-      mainContent.classList.remove("opacity-0", "translate-y-6");
-      mainContent.classList.add("opacity-100", "translate-y-0");
+      if (mainContent) {
+        mainContent.classList.remove("opacity-0", "translate-y-6");
+        mainContent.classList.add("opacity-100", "translate-y-0");
+      }
       if (floatingMusicDock) {
         floatingMusicDock.classList.remove("opacity-0", "translate-y-8");
         floatingMusicDock.classList.add("opacity-100", "translate-y-0");
@@ -270,7 +328,31 @@ function unlockWebsite() {
 
     // Auto-start ambient music on unlock
     startAudio();
-  }, 500);
+  }, 400);
+}
+
+function initDevMode() {
+  if (CONFIG.devMode) {
+    unlockWebsite(true);
+  }
+
+  const toggleBtn = document.getElementById("btn-toggle-lock-screen");
+  const lockScreen = document.getElementById("lock-screen");
+  const mainContent = document.getElementById("main-content");
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      const isLockHidden = lockScreen.classList.contains("hidden");
+      if (isLockHidden) {
+        lockScreen.classList.remove("hidden", "opacity-0", "pointer-events-none", "scale-95");
+        mainContent.classList.add("hidden");
+        toggleBtn.textContent = "Show Letter";
+      } else {
+        unlockWebsite(true);
+        toggleBtn.textContent = "Lock Test";
+      }
+    });
+  }
 }
 
 /* ==========================================================================
