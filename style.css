@@ -65,12 +65,14 @@ body {
 .text-blend-gradient {
   background: linear-gradient(135deg, #f7e7df 0%, #e2b49a 45%, #d67d90 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gold-gradient {
   background: linear-gradient(135deg, #fff2eb 0%, #e6beaa 50%, #c48c77 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
