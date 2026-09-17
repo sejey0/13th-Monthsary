@@ -9,7 +9,8 @@ const CONFIG = {
   dateString: "August 15, 2026",
   occasion: "13th Monthsary",
   // Path to your custom mp3 file (e.g. './music.mp3' or full URL)
-  audioSrc: "",
+  audioSrc: "assets/audio/Tadhana%20(feat.%20Trisha%20Macapagal).mp3",
+  audioTitle: "Tadhana - Trisha Macapagal",
   devMode: true, // Dev mode: Bypasses lock screen automatically on load
 };
 
@@ -538,6 +539,9 @@ window.openLetter = function(e) {
   if (isLetterOpened) return;
   isLetterOpened = true;
 
+  // Auto-play the background music and loop nonstop when the letter is opened
+  startAudio();
+
   const sealBtn = document.getElementById("seal-btn");
   const envelopeFront = document.getElementById("envelope-front");
   const letterSheet = document.getElementById("letter-sheet");
@@ -625,17 +629,35 @@ function initAudioPlayer() {
   const playToggleBtns = document.querySelectorAll(".btn-toggle-play");
   const muteBtns = document.querySelectorAll(".btn-toggle-mute");
   const volumeSliders = document.querySelectorAll(".volume-slider");
-  const audioSourceModal = document.getElementById("audio-source-modal");
-  const openSourceModalBtns = document.querySelectorAll(".btn-open-source-modal");
-  const closeSourceModalBtn = document.getElementById("btn-close-source-modal");
-  const applySourceBtn = document.getElementById("btn-apply-source");
-  const customAudioInput = document.getElementById("custom-audio-url");
-  const fileAudioInput = document.getElementById("custom-audio-file");
-  const audioModeSelect = document.getElementById("audio-mode-select");
 
-  // Check if initial audioSrc exists
-  if (CONFIG.audioSrc && CONFIG.audioSrc.trim() !== "") {
-    audioElement.src = CONFIG.audioSrc;
+  if (audioElement) {
+    // Enable nonstop looping
+    audioElement.loop = true;
+
+    // Check if initial audioSrc exists in CONFIG or HTML element
+    if (CONFIG.audioSrc && CONFIG.audioSrc.trim() !== "") {
+      audioElement.src = CONFIG.audioSrc;
+      updateAudioSourceBadge(CONFIG.audioTitle || "Tadhana - Trisha Macapagal");
+    } else if (audioElement.src && audioElement.src !== window.location.href) {
+      updateAudioSourceBadge(CONFIG.audioTitle || "Tadhana - Trisha Macapagal");
+    }
+
+    // Seamless nonstop loop listener as reliable fallback
+    audioElement.addEventListener("ended", () => {
+      audioElement.currentTime = 0;
+      audioElement.play().catch(() => {});
+    });
+
+    // Synchronize play/pause state with UI
+    audioElement.addEventListener("play", () => {
+      isPlaying = true;
+      updateAudioUI();
+    });
+
+    audioElement.addEventListener("pause", () => {
+      isPlaying = false;
+      updateAudioUI();
+    });
   }
 
   // Play / Pause Toggles
@@ -659,62 +681,6 @@ function initAudioPlayer() {
       setVolume(parseFloat(e.target.value));
     });
   });
-
-  // Music Source Modal Interactions
-  openSourceModalBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (audioSourceModal) audioSourceModal.classList.remove("hidden");
-    });
-  });
-
-  if (closeSourceModalBtn && audioSourceModal) {
-    closeSourceModalBtn.addEventListener("click", () => {
-      audioSourceModal.classList.add("hidden");
-    });
-  }
-
-  if (applySourceBtn) {
-    applySourceBtn.addEventListener("click", () => {
-      const mode = audioModeSelect ? audioModeSelect.value : "file";
-      
-      if (mode === "file" && fileAudioInput && fileAudioInput.files[0]) {
-        const file = fileAudioInput.files[0];
-        const url = URL.createObjectURL(file);
-        audioElement.src = url;
-        updateAudioSourceBadge(file.name);
-        startAudio();
-      } else if (customAudioInput && customAudioInput.value.trim() !== "") {
-        audioElement.src = customAudioInput.value.trim();
-        updateAudioSourceBadge("Custom Audio Stream");
-        startAudio();
-      }
-
-      if (audioSourceModal) audioSourceModal.classList.add("hidden");
-    });
-  }
-
-  // Mode select change in modal
-  if (audioModeSelect) {
-    audioModeSelect.addEventListener("change", (e) => {
-      const customUrlContainer = document.getElementById("custom-url-container");
-      const fileUploadContainer = document.getElementById("file-upload-container");
-      if (e.target.value === "url") {
-        if (customUrlContainer) customUrlContainer.classList.remove("hidden");
-        if (fileUploadContainer) fileUploadContainer.classList.add("hidden");
-      } else {
-        if (fileUploadContainer) fileUploadContainer.classList.remove("hidden");
-        if (customUrlContainer) customUrlContainer.classList.add("hidden");
-      }
-    });
-  }
-
-  // Handle native audio element end (looping)
-  if (audioElement) {
-    audioElement.addEventListener("ended", () => {
-      audioElement.currentTime = 0;
-      audioElement.play().catch(() => {});
-    });
-  }
 }
 
 function updateAudioSourceBadge(name) {
@@ -733,21 +699,35 @@ function togglePlay() {
 }
 
 function startAudio() {
-  if (!audioElement || !audioElement.src || audioElement.src === window.location.href) {
-    const audioSourceModal = document.getElementById("audio-source-modal");
-    if (audioSourceModal) audioSourceModal.classList.remove("hidden");
-    return;
+  if (!audioElement) return;
+
+  if (!audioElement.src || audioElement.src === window.location.href) {
+    if (CONFIG.audioSrc && CONFIG.audioSrc.trim() !== "") {
+      audioElement.src = CONFIG.audioSrc;
+    } else {
+      return;
+    }
   }
 
   audioElement.volume = isMuted ? 0 : currentVolume;
-  audioElement.play().then(() => {
-    isPlaying = true;
+  audioElement.loop = true;
+
+  if (isPlaying && !audioElement.paused) {
     updateAudioUI();
-  }).catch((err) => {
-    console.warn("Audio playback waiting for user file / interaction:", err);
-    isPlaying = false;
-    updateAudioUI();
-  });
+    return;
+  }
+
+  const playPromise = audioElement.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      isPlaying = true;
+      updateAudioUI();
+    }).catch((err) => {
+      console.warn("Audio playback waiting for user file / interaction:", err);
+      isPlaying = false;
+      updateAudioUI();
+    });
+  }
 }
 
 function pauseAudio() {
