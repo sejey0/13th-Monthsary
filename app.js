@@ -11,7 +11,6 @@ const CONFIG = {
   // Path to your custom mp3 file (e.g. './music.mp3' or full URL)
   audioSrc: "assets/audio/Tadhana%20(feat.%20Trisha%20Macapagal).mp3",
   audioTitle: "Tadhana - Trisha Macapagal",
-  devMode: true, // Dev mode: Bypasses lock screen automatically on load
 };
 
 // State Variables
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initKeypad();
   initAudioPlayer();
   initLetterInteraction();
-  initDevMode();
 });
 
 // Refresh Lucide Icons
@@ -505,29 +503,6 @@ window.lockWebsite = function(e) {
     dot.classList.remove("bg-[#f472b6]", "border-[#f472b6]", "bg-rose-500", "border-rose-500", "bg-emerald-400", "border-emerald-400", "shadow-[0_0_14px_rgba(244,114,182,0.8)]");
   });
 };
-
-function initDevMode() {
-  if (CONFIG.devMode) {
-    unlockWebsite(true);
-  }
-
-  const toggleBtn = document.getElementById("btn-toggle-lock-screen");
-  const lockScreen = document.getElementById("lock-screen");
-  const mainContent = document.getElementById("main-content");
-
-  if (toggleBtn) {
-    toggleBtn.addEventListener("click", () => {
-      const isLockHidden = lockScreen.classList.contains("hidden");
-      if (isLockHidden) {
-        window.lockWebsite();
-        toggleBtn.textContent = "Show Letter";
-      } else {
-        unlockWebsite(true);
-        toggleBtn.textContent = "Lock Test";
-      }
-    });
-  }
-}
 
 /* ==========================================================================
    LETTER & ENVELOPE INTERACTION
